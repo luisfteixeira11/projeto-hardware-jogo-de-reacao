@@ -44,7 +44,7 @@ def luzes_acendem(): ##todas as luzes vao acendendo como um sinal de transito no
     GPIO.output(17, GPIO.LOW)
     GPIO.output(27, GPIO.LOW)
     GPIO.output(22, GPIO.LOW)
-    
+   
 def luzes_comemoram():
     for _ in range(5):  # piscam 5 vezes se entrar no ranking
         GPIO.output(17, GPIO.HIGH)
@@ -55,22 +55,22 @@ def luzes_comemoram():
         GPIO.output(22, GPIO.LOW)
         GPIO.output(27, GPIO.LOW)
         time.sleep(0.2)
-        
+       
 def luzes_tristes():
     # pisca o vermelho 3 vezes para tristeza
     for _ in range(3):
-        GPIO.output(17, GPIO.HIGH) 
+        GPIO.output(17, GPIO.HIGH)
         time.sleep(0.3)
         GPIO.output(17, GPIO.LOW)
         time.sleep(0.3)
-        
+       
 def luzes_recorde():
     for _ in range(7):
         GPIO.output(22, GPIO.HIGH)  ##verde varias vezes
         time.sleep(0.15)
         GPIO.output(22, GPIO.LOW)
         time.sleep(0.15)
-        
+       
 def luzes_aplaudem():
     for _ in range(7):
         GPIO.output(17, GPIO.HIGH)
@@ -82,7 +82,7 @@ def luzes_aplaudem():
         GPIO.output(22, GPIO.HIGH)
         time.sleep(0.1)
         GPIO.output(22, GPIO.LOW)
-        
+       
 def luzes_rodadaesp():
     for _ in range(6):
         GPIO.output(17, GPIO.HIGH)  # vermelho
@@ -118,8 +118,10 @@ def cronometro_de_espera(tempolim): ##da um tempo de espera para concentração
     while True:
         tempo_atual = time.time()
         tempo_decorrido = tempo_atual - agora
-        if medir_distancia() <= 60:
+        distancia = medir_distancia()
+        if 60 >= distancia:
             luzes_tristes()
+            time.sleep(1)
             print("KKKKKKKK queimou a largadapae")
             print("")
             errado = True
@@ -148,7 +150,7 @@ def largada(x): ##acende uma luz, assim, dando o necessário para o jogador acio
 def cronometro_reacao():
     global lugar, contavitorias, errado
     agora = time.time()
-
+ 
     while True:
         dist = medir_distancia()
         tempo_decorrido = time.time() - agora
@@ -217,7 +219,7 @@ def atualizar_top5(tempo):
     top_nomes[pos] = ""  # preenchido depois
     atualizado = True
     return pos
-
+ 
 def cronometroesp1(vd, am ,vm): ##nao acerte os que acenderam
     global contavitorias
     agora = time.time()
@@ -252,7 +254,7 @@ def cronometroesp1(vd, am ,vm): ##nao acerte os que acenderam
                 print("")
                 luzes_tristes()
                 return 0
-        
+       
         if tempo_decorrido > 10:
             print("pobicho?kkkkkkkkkkkkkkkkkkkkk")
             print("")
@@ -261,7 +263,7 @@ def cronometroesp1(vd, am ,vm): ##nao acerte os que acenderam
             GPIO.output(22, GPIO.LOW)
             return -1
         time.sleep(0.001)
-        
+       
 def cronometroesp2(): ##nao toque em nenhum
     global contavitorias
     agora = time.time()
@@ -275,7 +277,7 @@ def cronometroesp2(): ##nao toque em nenhum
             print("ainaovei")
             luzes_tristes()
             return 0
-        
+       
         if tempo_decorrido > 10:
             print("boa bicho, atento")
             print("")
@@ -286,7 +288,7 @@ def cronometroesp2(): ##nao toque em nenhum
             GPIO.output(22, GPIO.LOW)
             return -1
         time.sleep(0.001)
-    
+   
 def cronometroesp3(vd, am, vm): ##toque em algum que esteja apagado
     global contavitorias
     agora = time.time()
@@ -319,9 +321,10 @@ def cronometroesp3(vd, am, vm): ##toque em algum que esteja apagado
             else:
                 print("ai nao pokk")
                 print("")
+                time.sleep(1.5)
                 luzes_tristes()
                 return 0
-        
+       
         if tempo_decorrido > 10:
             print("pobicho?kkkkkkkkkkkkkkkkkkkkk")
             print("")
@@ -330,8 +333,8 @@ def cronometroesp3(vd, am, vm): ##toque em algum que esteja apagado
             GPIO.output(22, GPIO.LOW)
             return -1
         time.sleep(0.001)
-
-
+ 
+ 
 def rodada_surpresa ():
     print("Rodada Surpresa... Pra te atrapalhar >:)")
     luzes_rodadaesp()
@@ -354,7 +357,7 @@ def rodada_surpresa ():
             am = True
         cronometroesp1(vd, am, vm)
         time.sleep(1)
-        
+       
     elif (xesp == 2):
         print ("Não acione nenhum led")
         time.sleep(2)
@@ -367,7 +370,7 @@ def rodada_surpresa ():
             GPIO.output(27, GPIO.HIGH)  # amarelo
         cronometroesp2()
         time.sleep(1)
-        
+       
     else:
         print("Não acerte o led que acendeu")
         time.sleep(2)
@@ -385,7 +388,9 @@ def rodada_surpresa ():
         cronometroesp3(vd, am, vm)
         time.sleep(1)
     time.sleep(0.5)
+    print("")
     print("Fim da Rodada Especial!")
+    print("")
     time.sleep(0.2)
     GPIO.output(17, GPIO.LOW)
     GPIO.output(27, GPIO.LOW)
@@ -394,10 +399,10 @@ def rodada_surpresa ():
     GPIO.output(17, GPIO.LOW)
     GPIO.output(27, GPIO.LOW)
     GPIO.output(22, GPIO.LOW)
-        
-            
-    
-
+       
+           
+   
+ 
  
 while not fimdoprograma:
     iniciar()
@@ -413,9 +418,8 @@ while not fimdoprograma:
             time.sleep(1)
             print("Calma, calma...")
             rodada_surpresa()
-            
             continue
-        if cronometro_de_espera(random.randint(2, 15)):
+        if cronometro_de_espera(random.randint(2, 10)):
             lugar = cronometro_reacao()
             time.sleep(2)
         else:
@@ -443,6 +447,13 @@ while not fimdoprograma:
         print(f"Seu número de vitórias é: {contavitorias}")
         if errado:
             fimdoprograma = True
+            try:
+                p = int(input("Quer continuar?? digite 1\n"))
+            except ValueError:
+                p = 0
+            if p == 1:
+                fimdoprograma = True
+                continue
             break
         vermelho = False
         amarelo = False
@@ -463,3 +474,4 @@ while not fimdoprograma:
             continue
         GPIO.cleanup()
         break
+ 
