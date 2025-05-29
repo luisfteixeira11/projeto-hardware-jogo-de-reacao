@@ -119,7 +119,7 @@ def cronometro_de_espera(tempolim): ##da um tempo de espera para concentração
         tempo_atual = time.time()
         tempo_decorrido = tempo_atual - agora
         distancia = medir_distancia()
-        if 60 >= distancia:
+        if distancia <= 60:
             luzes_tristes()
             time.sleep(1)
             print("KKKKKKKK queimou a largadapae")
@@ -412,49 +412,58 @@ while not fimdoprograma:
     print("Para terminar no meio do jogo basta apertar Ctrl + C")
     print("")
     while True:
-        errado = False
-        luzes_acendem()
-        if (contavitorias%5==0 and contavitorias>=5):
-            time.sleep(1)
-            print("Calma, calma...")
-            rodada_surpresa()
-            continue
-        if cronometro_de_espera(random.randint(2, 10)):
-            lugar = cronometro_reacao()
-            time.sleep(2)
-        else:
-            tempo_e_dist(0, medir_distancia())
-            time.sleep(2)
-        if atualizado and lugar != -1:
-            nomao = input("Bota teu nome que tu ganhou: ").strip()
-            luzes_comemoram()
-            if not nomao:
-                nomao = "nao botou nada pq quis"
-            print("")
-            if lugar == 0:
-                luzes_recorde()
-            top_nomes[lugar] = nomao
-            print("\nRanking Top 5 Tempos de Reação:")
-            for i in range(5):
-                if top_tempos[i] != 0:
-                    print(f"{i+1}º: {top_nomes[i]} - {top_tempos[i]:.2f} milissegundos")
-                print("")
-            atualizado = False
-        if contavitorias >= 3:
-            luzes_aplaudem()
-            print("Você atingiu 3 ou mais vitórias")
-            print("")
-        print(f"Seu número de vitórias é: {contavitorias}")
-        if errado:
-            fimdoprograma = True
-            try:
-                p = int(input("Quer continuar?? digite 1\n"))
-            except ValueError:
-                p = 0
-            if p == 1:
-                fimdoprograma = True
+        try:
+            errado = False
+            luzes_acendem()
+            if (contavitorias%5==0 and contavitorias>=5):
+                time.sleep(1)
+                print("Calma, calma...")
+                rodada_surpresa()
                 continue
+            if cronometro_de_espera(random.randint(2, 10)):
+                lugar = cronometro_reacao()
+                time.sleep(2)
+            else:
+                tempo_e_dist(0, medir_distancia())
+                time.sleep(2)
+            if atualizado and lugar != -1:
+                nomao = input("Bota teu nome que tu ganhou: ").strip()
+                luzes_comemoram()
+                if not nomao:
+                    nomao = "nao botou nada pq quis"
+                print("")
+                if lugar == 0:
+                    luzes_recorde()
+                top_nomes[lugar] = nomao
+                print("\nRanking Top 5 Tempos de Reação:")
+                for i in range(5):
+                    if top_tempos[i] != 0:
+                        print(f"{i+1}º: {top_nomes[i]} - {top_tempos[i]:.2f} milissegundos")
+                    print("")
+                atualizado = False
+            if contavitorias >= 3:
+                luzes_aplaudem()
+                print("Você atingiu 3 ou mais vitórias")
+                print("")
+            print(f"Seu número de vitórias é: {contavitorias}")
+            if errado:
+                fimdoprograma = True
+                try:
+                    p = int(input("Quer continuar?? digite 1\n"))
+                except ValueError:
+                    p = 0
+                if p == 1:
+                    fimdoprograma = True
+                    continue
+                break
+        except KeyboardInterrupt:
+            amarelo = False
+            vermelho = False
+            verde = False
+            GPIO.cleanup()
+            fimdoprograma = True
             break
+
         vermelho = False
         amarelo = False
         verde = False
